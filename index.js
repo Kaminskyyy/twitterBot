@@ -98,7 +98,7 @@ app.post('/postReply', (req, res) => {
 	getNewestTweetId(req.body.replyToUsername, oauth, (err, newestId) => {
 
 		if (!err) {
-			const url = 'http://localhost:2000/postTweet';
+			const url = 'https://twitter-bot-2000.herokuapp.com/postTweet';
 
 			const body = {
 				text: req.body.text,
