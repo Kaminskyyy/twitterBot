@@ -11,7 +11,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 
-
+const port = process.env.PORT || 2000;
 
 const oauth = {
 	callback: 'http://localhost:2000/callback',
@@ -112,6 +112,6 @@ app.post('/postReply', (req, res) => {
 	});
 });
 
-app.listen(2000, () => {
+app.listen(port, () => {
 	console.log('Listening...');
 });

@@ -1,6 +1,6 @@
 import request from 'postman-request';
 
-async function getNewestTweetId(screen_name, oauth, callback) {
+function getNewestTweetId(screen_name, oauth, callback) {
 	const url = 'https://api.twitter.com/2/tweets/search/recent?query=' + encodeURIComponent('from:' + screen_name);  
 	
 	request.get({ url, oauth, json:true }, (e, r, body) => {
