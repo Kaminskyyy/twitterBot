@@ -5,6 +5,8 @@ import express from 'express';
 import request from 'postman-request';
 import qs from 'querystring';
 
+import { getNewestTweetId } from './utils/reply.js';
+
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
@@ -23,6 +25,7 @@ const url = 'https://api.twitter.com/oauth/request_token';
 
 const app = express();
 
+app.use(express.json());
 app.use(express.static(join(__dirname,  '/public')));
 
 console.log(join(__dirname,  '/public'));
@@ -69,16 +72,19 @@ app.get('/user', (req, res) => {
 	});
 });	
 
-app.get('/postTweet', (req, res) => {
+app.post('/postTweet', (req, res) => {
+	console.log('################');
+	console.log(req.body);
+
 	let url = 'https://api.twitter.com/2/tweets';
 
 	const body = {
-		text: req.query.text
+		text: req.body.text
 	};
 
-	if (req.query.idToReply) {
+	if (req.body.replyToId) {
 		body.reply = {
-			in_reply_to_tweet_id: req.query.idToReply,
+			in_reply_to_tweet_id: req.body.replyToId,
 		};
 	}
 	
@@ -88,22 +94,21 @@ app.get('/postTweet', (req, res) => {
 	});
 });
 
-app.get('/postReply', (req, res) => {
-	const url = 'http://localhost:2000/user?screen_name=' + req.query.screen_name;
+app.post('/postReply', (req, res) => {
+	getNewestTweetId(req.body.replyToUsername, oauth, (err, newestId) => {
 
-	request.get({ url, json: true }, (e, r, body) => {
-		const url = 'https://api.twitter.com/2/tweets/search/recent?query=' + encodeURIComponent('from:' + body.data.username);  
-		
-		request.get({ url, oauth, json:true }, (e, r, body) => {
-			
-			if (body.meta.result_count < 1) {
-				res.send({error: 'no tweets'});
-			} else {
-				//const url = 'http://localhost:2000/postTweet?'
-				request.get()
-				res.send();
-			}
-		});
+		if (!err) {
+			const url = 'http://localhost:2000/postTweet';
+
+			const body = {
+				text: req.body.text,
+				replyToId: newestId
+			};
+
+			request.post({ url, body, json: true }, (e, r, body) => {
+
+			});
+		}
 	});
 });
 

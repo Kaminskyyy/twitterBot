@@ -20,15 +20,36 @@ userForm.addEventListener('submit', (event) => {
 tweetForm.addEventListener('submit', (event) => {
 	event.preventDefault();
 
-	fetch('/postTweet?text=' + tweetInput.value)
-		.then((response) => response.json())
+	const tweet = {
+		text: tweetInput.value
+	};
+
+	fetch('/postTweet', {
+		method: 'POST',
+		headers: {
+			'Content-Type': 'application/json;charset=utf-8'
+		},
+		body: JSON.stringify(tweet) 
+	})
+		.then((response) => response.text())
 		.then((tweet) => console.log(tweet));
 });
 
 replyTweetForm.addEventListener('submit', (event) => {
 	event.preventDefault();
 
-	fetch('/postReply?screen_name=' + replyToInput.value)
+	const reply = {
+		text: replyTweetInput.value,
+		replyToUsername: replyToInput.value
+	};
+
+	fetch('/postReply', {
+		method: 'POST',
+		headers: {
+			'Content-Type': 'application/json;charset=utf-8'
+		},
+		body: JSON.stringify(reply)
+	})
 		.then((response) => response.json())
 		.then((body) => console.log(body));
 
