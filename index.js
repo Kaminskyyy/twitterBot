@@ -14,9 +14,9 @@ const __dirname = dirname(__filename);
 const port = process.env.PORT || 2000;
 
 const oauth = {
-	callback: 'http://localhost:2000/callback',
-	consumer_key: '9EWItTB05s049qtfZWC7VImY2',
-	consumer_secret: 'YB0pxAQ7eGLNBJdK9EL46R3tq96CyJ5fQStZd0duEfqBx7Jppv',
+	callback: 'https://twitter-bot-2000.herokuapp.com/callback',
+	consumer_key: '25dca2P7hKDXGAvlQrAVAvzpP',
+	consumer_secret: 'PS07aydBT3f3xZvap6fibyLjcGBAf0b2IbtBjCepUHEBxKdf9h',
 };
 
 let token_secret = null;
