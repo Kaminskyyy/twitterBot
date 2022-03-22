@@ -1,8 +1,10 @@
 <!DOCTYPE html>
 <head>
 	<title>Menu</title>
+	<link rel="stylesheet" href="/css/styles.css">
 </head>
 <body>
+	{{>header}}
 	<h1>user info</h1>
 	<form id="userForm">
 		<input id="userInput" placeholder="user info">
@@ -24,5 +26,5 @@
 		<input id="replyTweetInput" placeholder="your tweet">
 		<button>Post tweet</button>
 	</form>
-	<script src="js/script.js"></script>
+	<script src="/js/twitterAPI.js"></script>
 </body>

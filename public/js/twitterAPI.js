@@ -12,7 +12,21 @@ const replyTweetInput = document.getElementById('replyTweetInput');
 userForm.addEventListener('submit', (event) => {
 	event.preventDefault();
 
-	fetch('/user?screen_name=' + userInput.value)
+	// REPLACE
+	const bearer = document.cookie.split(';').reduce((res, str) => {
+		const pair = str.split('=');
+		if (pair[0] === 'bearer') return pair[1];
+		return false; 
+	}, null);
+	// REPLACE
+
+	fetch('/user?screen_name=' + userInput.value, {
+		method: 'GET',
+		headers: {
+			'Content-Type': 'application/json;charset=utf-8',
+			'Authorization': 'Bearer ' + bearer,
+		},
+	})
 		.then((response) => response.json())
 		.then((user) => console.log(user));
 });
@@ -20,16 +34,25 @@ userForm.addEventListener('submit', (event) => {
 tweetForm.addEventListener('submit', (event) => {
 	event.preventDefault();
 
-	const tweet = {
-		text: tweetInput.value
+	// REPLACE
+	const bearer = document.cookie.split(';').reduce((res, str) => {
+		const pair = str.split('=');
+		if (pair[0] === 'bearer') return pair[1];
+		return false; 
+	}, null);
+	// REPLACE
+
+	const body = {
+		text: tweetInput.value,
 	};
 
 	fetch('/postTweet', {
 		method: 'POST',
 		headers: {
-			'Content-Type': 'application/json;charset=utf-8'
+			'Content-Type': 'application/json;charset=utf-8',
+			'Authorization': 'Bearer ' + bearer,
 		},
-		body: JSON.stringify(tweet) 
+		body: JSON.stringify(body) 
 	})
 		.then((response) => response.text())
 		.then((tweet) => console.log(tweet));
@@ -52,7 +75,4 @@ replyTweetForm.addEventListener('submit', (event) => {
 	})
 		.then((response) => response.json())
 		.then((body) => console.log(body));
-
-	//console.log(replyToInput.value);
-	//console.log(replyTweetInput.value);
 });

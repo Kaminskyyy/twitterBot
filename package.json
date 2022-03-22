@@ -4,15 +4,24 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js"
+    "start": "node src/index.js",
+    "dev": "nodemon src/index.js -e js,hbs,css"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "bcrypt": "^5.0.1",
+    "cookie-parser": "^1.4.6",
     "express": "^4.17.3",
+    "handlebars": "^4.7.7",
+    "hbs": "^4.2.0",
+    "js-cookie": "^3.0.1",
+    "jsonwebtoken": "^8.5.1",
+    "mongoose": "^6.2.7",
     "postman-request": "^2.88.1-postman.31",
     "querystring": "^0.2.1",
-    "twitter": "^1.7.1"
+    "twitter": "^1.7.1",
+    "validator": "^13.7.0"
   },
   "type": "module"
 }
