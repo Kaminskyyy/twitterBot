@@ -9,18 +9,21 @@ const replyToInput = document.getElementById('replyToInput');
 const replyTweetForm = document.getElementById('replyTweetForm');
 const replyTweetInput = document.getElementById('replyTweetInput');
 
+const bearer = getBearer();
+
 userForm.addEventListener('submit', (event) => {
 	event.preventDefault();
 
 	// REPLACE
-	const bearer = document.cookie.split(';').reduce((res, str) => {
-		const pair = str.split('=');
-		if (pair[0] === 'bearer') return pair[1];
-		return false; 
-	}, null);
+	// const bearer = document.cookie.split(';').reduce((res, str) => {
+	// 	const pair = str.split('=');
+	// 	if (pair[0] === 'bearer') return pair[1];
+	// 	return false; 
+	// }, null);
 	// REPLACE
+	const query = '?username=' + userInput.value;
 
-	fetch('/user?screen_name=' + userInput.value, {
+	fetch('/twitter/users' + query, {
 		method: 'GET',
 		headers: {
 			'Content-Type': 'application/json;charset=utf-8',
@@ -35,18 +38,18 @@ tweetForm.addEventListener('submit', (event) => {
 	event.preventDefault();
 
 	// REPLACE
-	const bearer = document.cookie.split(';').reduce((res, str) => {
-		const pair = str.split('=');
-		if (pair[0] === 'bearer') return pair[1];
-		return false; 
-	}, null);
+	// const bearer = document.cookie.split(';').reduce((res, str) => {
+	// 	const pair = str.split('=');
+	// 	if (pair[0] === 'bearer') return pair[1];
+	// 	return false; 
+	// }, null);
 	// REPLACE
 
 	const body = {
 		text: tweetInput.value,
 	};
 
-	fetch('/postTweet', {
+	fetch('/twitter/tweets', {
 		method: 'POST',
 		headers: {
 			'Content-Type': 'application/json;charset=utf-8',
@@ -61,18 +64,27 @@ tweetForm.addEventListener('submit', (event) => {
 replyTweetForm.addEventListener('submit', (event) => {
 	event.preventDefault();
 
-	const reply = {
+	const body = {
 		text: replyTweetInput.value,
-		replyToUsername: replyToInput.value
+		replyToUser: replyToInput.value
 	};
 
-	fetch('/postReply', {
+	fetch('/twitter/tweets', {
 		method: 'POST',
 		headers: {
-			'Content-Type': 'application/json;charset=utf-8'
+			'Content-Type': 'application/json;charset=utf-8',
+			'Authorization': 'Bearer ' + bearer,
 		},
-		body: JSON.stringify(reply)
+		body: JSON.stringify(body)
 	})
 		.then((response) => response.json())
 		.then((body) => console.log(body));
 });
+
+function getBearer() {
+	return document.cookie.split(';').reduce((res, str) => {
+		const pair = str.split('=');
+		if (pair[0] === 'bearer') return pair[1];
+		return false; 
+	}, null);
+}

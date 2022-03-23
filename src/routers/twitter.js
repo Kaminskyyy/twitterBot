@@ -1,42 +1,48 @@
 import { Router } from 'express';
-import { getNewestTweetId } from '../utils/reply.js';
+import { getNewestTweetId } from '../utils/newestId.js';
 import request from 'postman-request';
 import { auth } from '../middleware/auth.js';
 
 const router = new Router();
 
-const consumerKeys = {
-	consumer_key: '25dca2P7hKDXGAvlQrAVAvzpP',
-	consumer_secret: 'PS07aydBT3f3xZvap6fibyLjcGBAf0b2IbtBjCepUHEBxKdf9h',
-};
+router.get('/twitter/users', auth, (req, res) => {
 
-router.get('/user', auth, (req, res) => {
+	const url = 'https://api.twitter.com/2/users/by/username/' + req.query.username+ '?expansions=pinned_tweet_id';
 
-	const url = 'https://api.twitter.com/2/users/by/username/' + req.query.screen_name + '?expansions=pinned_tweet_id';
+	const oauth = req.user.getTwitterApiAccessTokens();
+	oauth.username = req.query.username;
 
-	request.get({ url, oauth: new Oauth(req.user) }, (e, r, user) => {
-		console.log(user);
+	request.get({ url, oauth }, (e, r, user) => {
 		res.send(user);
 	});	
 });	
 
-router.post('/postTweet', auth,  (req, res) => {
+router.post('/twitter/tweets', auth, async (req, res) => {
 	const url = 'https://api.twitter.com/2/tweets';
 
 	const body = {
 		text: req.body.text
 	};
 
-	if (req.body.replyToId) {
-		body.reply = {
-			in_reply_to_tweet_id: req.body.replyToId,
-		};
+	const oauth = req.user.getTwitterApiAccessTokens();
+
+	try {
+		if (req.body.replyToUser) {
+			const in_reply_to_tweet_id = await getNewestTweetId(req.body.replyToUser, oauth);
+
+			body.reply = {
+				in_reply_to_tweet_id,
+			};
+		}
+
+		request.post({ url, oauth, body, json: true}, (e, r, body) => {
+			if (e) throw new Error();
+
+			res.send(body);
+		});
+	} catch (error) {
+		res.status(400).send();
 	}
-
-
-	request.post({ url, oauth: new Oauth(req.user), body, json: true}, (e, r, body) => {
-		res.send(body);
-	});
 });
 
 router.post('/postReply', (req, res) => {

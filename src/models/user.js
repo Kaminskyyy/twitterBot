@@ -50,7 +50,20 @@ userSchema.methods.generateAuthToken = function() {
 
 
 userSchema.methods.getTwitterApiAccessTokens = function() {
-	
+	const user = this;
+	const keys = {};
+
+	const consumerKeys = {
+		consumer_key: '25dca2P7hKDXGAvlQrAVAvzpP',
+		consumer_secret: 'PS07aydBT3f3xZvap6fibyLjcGBAf0b2IbtBjCepUHEBxKdf9h',
+	};
+
+	keys.consumer_key = consumerKeys.consumer_key;
+	keys.consumer_secret = consumerKeys.consumer_secret;
+	keys.token = user.oauth_token;
+	keys.token_secret = user.oauth_token_secret;
+
+	return keys;
 };
 
 userSchema.methods.toJSON = function() {
