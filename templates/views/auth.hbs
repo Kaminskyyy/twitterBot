@@ -1,19 +1,25 @@
 <!DOCTYPE html>
 <head>
 	<title>main page</title>
-	<link rel="stylesheet" href="/css/styles.css"> 
+	<link rel="stylesheet" href="/css/header.css">
+	<link rel="stylesheet" href="/css/auth.css">
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Playfair+Display&display=swap" rel="stylesheet">
 </head>
 <body>
 	{{>header}}
-	<h1>Login/Register</h1>
-	<form>
-		<input id="email" placeholder="Email">
-		<input id="password" type="password" placeholder="Password">
-		<button id="loginBtn">Login</button>
-		<button id="registerBtn">Register</button>
-	</form>
+	<div id="main">
+		<h2>Login/Register</h2>
 
-	<button id="cookie">Show cookie</button>
-	<script src="/js/twitter-auth.js"></script>
-	<script src="/js/auth.js"></script>
+		<form>
+			<input id="email" placeholder="Email">
+			<input id="password" type="password" placeholder="Password">
+			<button id="loginBtn">Login</button>
+			<button id="registerBtn">Register</button>
+		</form>
+
+		<script src="/js/twitter-auth.js"></script>
+		<script src="/js/auth.js"></script>
+	</div>
 </body>

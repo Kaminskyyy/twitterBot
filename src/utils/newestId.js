@@ -5,8 +5,6 @@ async function getNewestTweetId(username, oauth) {
 	
 	return new Promise((resolve, reject) => {
 		request.get({ url, oauth, json: true }, (e, r, body) => {
-			
-			console.log(body);
 
 			if (body.meta.result_count < 1) {
 				reject('No tweets!');

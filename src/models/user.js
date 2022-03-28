@@ -40,7 +40,7 @@ const userSchema = new mongoose.Schema({
 userSchema.methods.generateAuthToken = function() {
 	const user = this;
 
-	const token = jwt.sign({ _id: user._id.toString() }, 'secretMustBeReplaced');
+	const token = jwt.sign({ _id: user._id.toString() }, process.env.JWT_SECRET_KEY);
 	user.tokens.push({ token });
 	
 	user.save();
@@ -54,10 +54,10 @@ userSchema.methods.getTwitterApiAccessTokens = function() {
 	const keys = {};
 
 	const consumerKeys = {
-		consumer_key: '25dca2P7hKDXGAvlQrAVAvzpP',
-		consumer_secret: 'PS07aydBT3f3xZvap6fibyLjcGBAf0b2IbtBjCepUHEBxKdf9h',
+		consumer_key: process.env.CONSUMER_KEY,
+		consumer_secret: process.env.CONSUMER_SECRET,
 	};
-
+	
 	keys.consumer_key = consumerKeys.consumer_key;
 	keys.consumer_secret = consumerKeys.consumer_secret;
 	keys.token = user.oauth_token;

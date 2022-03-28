@@ -45,29 +45,4 @@ router.post('/twitter/tweets', auth, async (req, res) => {
 	}
 });
 
-router.post('/postReply', (req, res) => {
-	getNewestTweetId(req.body.replyToUsername, oauth, (err, newestId) => {
-
-		if (!err) {
-			const url = 'https://twitter-bot-2000.herokuapp.com/postTweet';
-
-			const body = {
-				text: req.body.text,
-				replyToId: newestId
-			};
-
-			request.post({ url, body, json: true }, (e, r, body) => {
-
-			});
-		}
-	});
-});
-
 export { router };
-
-function Oauth(user) {
-	this.consumer_key = consumerKeys.consumer_key;
-	this.consumer_secret = consumerKeys.consumer_secret;
-	this.token = user.oauth_token;
-	this.token_secret = user.oauth_token_secret;
-}

@@ -21,6 +21,8 @@ loginBtn.addEventListener('click', (event) => {
 	}).then((res) => {
 
 		if (!res.ok) { 
+			alert('Нахуй ты пароль забыл?');
+			passwordField.value = '';
 			return Promise.reject('Unable to login');
 		} 
 		

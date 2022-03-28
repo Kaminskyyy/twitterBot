@@ -4,7 +4,7 @@ import User from '../models/user.js';
 async function auth(req, res, next) {
 	try {
 		const token = req.get('Authorization').replace('Bearer ', '');
-		const decoded = jwt.decode(token, 'secretMustBeReplaced');
+		const decoded = jwt.decode(token, process.env.JWT_SECRET_KEY);
 		const user = await User.findOne({ _id: decoded._id, 'tokens.token': token });
 
 		if (!user) {

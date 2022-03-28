@@ -2,6 +2,7 @@ import { dirname, join } from 'path';
 import { fileURLToPath, URLSearchParams } from 'url';
 
 import hbs from 'hbs';
+import 'dotenv/config';
 import express from 'express';
 import cookieParser from 'cookie-parser';
 
@@ -24,7 +25,7 @@ app.set('views', join(__dirname, '../templates/views'));
 hbs.registerPartials(join(__dirname, '../templates/partials'));
 
 //	Middleware
-app.use(cookieParser('THERE_MUST_BE_A_SECRET_KEY'));
+app.use(cookieParser(process.env.COOKIE_PARSER_SECRET));
 app.use(express.json());
 app.use(express.static(join(__dirname,  '../public')));
 
@@ -37,4 +38,3 @@ app.use(twitterAuthRouter);
 app.listen(port, () => {
 	console.log('Server is up on port ' + port);
 });
-

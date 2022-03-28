@@ -11,7 +11,6 @@ router.post('/users', async (req, res) => {
 	try {
 		await user.save();
 
-		console.log('HERE');
 		const token = user.generateAuthToken();
 
 		res.cookie('bearer', token);

@@ -1,30 +1,42 @@
 <!DOCTYPE html>
 <head>
 	<title>Menu</title>
-	<link rel="stylesheet" href="/css/styles.css">
+	<link rel="stylesheet" href="/css/header.css">
+	<link rel="stylesheet" href="/css/menu.css">
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Playfair+Display&display=swap" rel="stylesheet">
 </head>
 <body>
 	{{>header}}
-	<h1>user info</h1>
-	<form id="userForm">
-		<input id="userInput" placeholder="user info">
-		<button>Search</button>
-	</form>
+	<div id="main">
+		{{!-- <h1>user info</h1>
+		<form id="userForm">
+			<input id="userInput" placeholder="user info">
+			<button>Search</button>
+		</form> --}}
+		<div id="postTweet">
+			<h3>Post tweet</h3>
+			<h6>Tweet</h6>
+			<form id="tweetForm">
+				<textarea id="tweetInput" placeholder="your tweet"></textarea>
+				<button>Post tweet</button>
+			</form>
+		</div>
 
-	<h1>Post tweet</h1>
-	<form id="tweetForm">
-		<input id="tweetInput" placeholder="your tweet">
-		<button>Post tweet</button>
-	</form>
-
-	<h1>Post tweet in reply</h1>
-	<form id="replyToForm">
-		<input id="replyToInput" placeholder="username without @">
-		<!-- <button>Post tweet</button> -->
-	</form>
-	<form id="replyTweetForm">
-		<input id="replyTweetInput" placeholder="your tweet">
-		<button>Post tweet</button>
-	</form>
+		<div id="postReply">
+			<h3>Post tweet in reply</h3>
+			<h6>Username</h6>
+			<form id="replyToForm">
+				<input id="replyToInput" placeholder="username without @">
+			</form>
+			<h6>Tweet</h6>
+			<form id="replyTweetForm">
+				<textarea id="replyTweetInput" placeholder="your tweet"></textarea>
+				<button>Post tweet</button>
+			</form>
+		</div>
+		<a href="/account">Профиль</a>
+	</div>
 	<script src="/js/twitterAPI.js"></script>
 </body>
