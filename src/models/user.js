@@ -2,6 +2,9 @@ import mongoose from 'mongoose';
 import validator from 'validator';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
+import cryptoJS from 'crypto-js';
+
+import { encryptTokens, decryptTokens } from '../utils/cipher.js';
 
 const userSchema = new mongoose.Schema({
 	email: {
@@ -49,19 +52,16 @@ userSchema.methods.generateAuthToken = function() {
 };
 
 
-userSchema.methods.getTwitterApiAccessTokens = function() {
+userSchema.methods.getTwitterApiAccessTokens = async function() {
 	const user = this;
 	const keys = {};
 
-	const consumerKeys = {
-		consumer_key: process.env.CONSUMER_KEY,
-		consumer_secret: process.env.CONSUMER_SECRET,
-	};
-	
-	keys.consumer_key = consumerKeys.consumer_key;
-	keys.consumer_secret = consumerKeys.consumer_secret;
-	keys.token = user.oauth_token;
-	keys.token_secret = user.oauth_token_secret;
+	const { oauthTokenDecrypted, oauthTokenSecretDecrypted } = await decryptTokens(user);
+
+	keys.consumer_key = process.env.CONSUMER_KEY;
+	keys.consumer_secret = process.env.CONSUMER_SECRET;
+	keys.token = oauthTokenDecrypted;
+	keys.token_secret = oauthTokenSecretDecrypted;
 
 	return keys;
 };
@@ -97,6 +97,13 @@ userSchema.pre('save', async function(next) {
 
 	if (user.isModified('password')) {
 		user.password = await bcrypt.hash(user.password, 8);
+	}
+
+	if (user.isModified('oauth_token')) {
+		const { oauthTokenEncrypted, oauthTokenSecretEncrypted } = await encryptTokens(user);
+
+		user.oauth_token = oauthTokenEncrypted;
+		user.oauth_token_secret = oauthTokenSecretEncrypted;
 	}
 	
 	next();

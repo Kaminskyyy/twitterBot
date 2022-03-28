@@ -5,12 +5,12 @@ import { auth } from '../middleware/auth.js';
 
 const router = new Router();
 
-router.get('/twitter/users', auth, (req, res) => {
+router.get('/twitter/users', auth, async (req, res) => {
 
 	const url = 'https://api.twitter.com/2/users/by/username/' + req.query.username+ '?expansions=pinned_tweet_id';
 
-	const oauth = req.user.getTwitterApiAccessTokens();
-	oauth.username = req.query.username;
+	const oauth = await req.user.getTwitterApiAccessTokens();
+	
 
 	request.get({ url, oauth }, (e, r, user) => {
 		res.send(user);
@@ -24,7 +24,7 @@ router.post('/twitter/tweets', auth, async (req, res) => {
 		text: req.body.text
 	};
 
-	const oauth = req.user.getTwitterApiAccessTokens();
+	const oauth = await req.user.getTwitterApiAccessTokens();
 
 	try {
 		if (req.body.replyToUser) {
