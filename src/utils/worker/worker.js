@@ -16,6 +16,8 @@ for (let username of usernames) {
 	postTweet(username);
 }
 
+parentPort.postMessage('Tweets posted!');
+
 async function postTweet(username) {
 	try {
 		const in_reply_to_tweet_id = await getNewestTweetId(username, oauth);
@@ -33,6 +35,7 @@ async function postTweet(username) {
 
 		request.post({ url, oauth, body, json: true }, (e, r, body) => {
 			if (e) throw new Error();
+			console.log(r.body);
 		});
 	} catch(error) {
 		console.log(error);

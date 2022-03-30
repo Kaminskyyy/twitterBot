@@ -1,7 +1,4 @@
-import * as fs from 'fs/promises';
 import * as xlsx from 'xlsx/xlsx.mjs';
-
-const fileName = 'TwitterAccs.xlsx';
 
 function extractUsernamesFromSheet(worksheet) {
 	const worksheetSize = worksheet['!ref'];
@@ -27,19 +24,15 @@ function extractUsernamesFromSheet(worksheet) {
 }
 
 function extractUsernames(fileBuffer) {
-	try {
-		const workbook = xlsx.read(fileBuffer);
+	const workbook = xlsx.read(fileBuffer);
 
-		let usernames = [];
-		for (let sheet in workbook.Sheets) {
-			const usernamesFromSheet = extractUsernamesFromSheet(workbook.Sheets[sheet]);
-			usernames = usernames.concat(usernamesFromSheet);
-		}
-				
-		return usernames;
-	} catch (error) {
-		console.log(error);
+	let usernames = [];
+	for (let sheet in workbook.Sheets) {
+		const usernamesFromSheet = extractUsernamesFromSheet(workbook.Sheets[sheet]);
+		usernames = usernames.concat(usernamesFromSheet);
 	}
+				
+	return usernames;
 }
 
 export { extractUsernames };

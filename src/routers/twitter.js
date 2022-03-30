@@ -4,6 +4,7 @@ import request from 'postman-request';
 import { auth } from '../middleware/auth.js';
 import multer from 'multer';
 import { startMailing } from '../utils/worker/mailing.js';
+import WorkerPool from '../utils/worker/threadpool.js';
 
 const router = new Router();
 
