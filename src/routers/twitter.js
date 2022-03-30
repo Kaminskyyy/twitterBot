@@ -2,6 +2,8 @@ import { Router } from 'express';
 import { getNewestTweetId } from '../utils/newestId.js';
 import request from 'postman-request';
 import { auth } from '../middleware/auth.js';
+import multer from 'multer';
+import { startMailing } from '../utils/worker/mailing.js';
 
 const router = new Router();
 
@@ -35,7 +37,7 @@ router.post('/twitter/tweets', auth, async (req, res) => {
 			};
 		}
 
-		request.post({ url, oauth, body, json: true}, (e, r, body) => {
+		request.post({ url, oauth, body, json: true }, (e, r, body) => {
 			if (e) throw new Error();
 
 			res.send(body);
@@ -43,6 +45,23 @@ router.post('/twitter/tweets', auth, async (req, res) => {
 	} catch (error) {
 		res.status(400).send();
 	}
+});
+
+const upload = multer({
+	fileFilter(req, file, callback) {
+		if (!file.originalname.match(/\.(xlsx|XLSX)$/)) {
+			return callback(new Error('Error! Allowed extensions: xlsx'));
+		}
+		callback(undefined, true);
+	}
+});
+
+router.post('/twitter/mailing', auth, upload.single('doc'), async (req, res) => {
+	const oauth = await req.user.getTwitterApiAccessTokens();
+
+	startMailing(req.file.buffer, oauth, req.body.tweet);
+
+	res.send();
 });
 
 export { router };
