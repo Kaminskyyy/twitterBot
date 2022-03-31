@@ -23,7 +23,7 @@ loginBtn.addEventListener('click', (event) => {
 		if (!res.ok) { 
 			alert('Нахуй ты пароль забыл?');
 			passwordField.value = '';
-			return Promise.reject('Unable to login');
+			throw new Error('Unable to login');
 		} 
 		
 		return res.json();
@@ -49,10 +49,7 @@ registerBtn.addEventListener('click', (event) => {
 		},
 		body: JSON.stringify(user),
 	}).then((res) => {
-		
-		if (!res.ok) { 
-			return Promise.reject('Unable to register user!');
-		} 
+		if (!res.ok) throw new Error('Unable to register user!');
 		
 		return res.json();
 	}).then((body) => {
@@ -66,10 +63,7 @@ registerBtn.addEventListener('click', (event) => {
 		});
 
 	}).then((res) => {
-		
-		if (!res.ok) { 
-			return Promise.reject('Unable to authorize!');
-		} 
+		if (!res.ok) throw new Error('Unable to authorize!');
 
 		return res.json();
 	}).then((body) => window.location = body.url)

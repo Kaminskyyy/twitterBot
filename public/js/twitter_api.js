@@ -14,7 +14,7 @@ tweetForm.addEventListener('submit', (event) => {
 	const body = {
 		text: tweetInput.value,
 	};
-
+	
 	fetch('/twitter/tweets', {
 		method: 'POST',
 		headers: {
@@ -23,8 +23,13 @@ tweetForm.addEventListener('submit', (event) => {
 		},
 		body: JSON.stringify(body) 
 	})
-		.then((response) => response.json())
-		.then((body) => console.log(body));
+		.then((res) => { 
+			if (!res.ok) throw new Error('Bad request');
+			
+			return res.json();
+		})
+		.then((body) => console.log(body))
+		.catch(console.log);
 });
 
 replyTweetForm.addEventListener('submit', (event) => {
@@ -43,8 +48,13 @@ replyTweetForm.addEventListener('submit', (event) => {
 		},
 		body: JSON.stringify(body)
 	})
-		.then((response) => response.json())
-		.then((body) => console.log(body));
+		.then((res) => {
+			if (!res.ok) throw new Error('Bad request');
+
+			return res.json();
+		})
+		.then((body) => console.log(body))
+		.catch(console.log);
 });
 
 function getBearer() {
