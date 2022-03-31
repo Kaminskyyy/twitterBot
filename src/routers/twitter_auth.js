@@ -3,15 +3,15 @@ import request from 'postman-request';
 import { auth } from '../middleware/auth.js';
 const router = new Router();
 
-let callback = 'http://localhost:2000/callback' ;
+let callback = process.env.CALLBACK_DEV ;
 if (process.env.PORT) {
-	callback = 'https://twitter-bot-2000.herokuapp.com/callback';
+	callback = process.env.CALLBACK_DEPLOY;
 }
 
 const consumerKeys = {
 	callback,
-	consumer_key: '25dca2P7hKDXGAvlQrAVAvzpP',
-	consumer_secret: 'PS07aydBT3f3xZvap6fibyLjcGBAf0b2IbtBjCepUHEBxKdf9h',
+	consumer_key: process.env.CONSUMER_KEY,
+	consumer_secret: process.env.CONSUMER_SECRET,
 };
 
 const waitingUsers = new Map();
@@ -65,19 +65,13 @@ router.get('/callback', (req, res) => {
 			result[pair[0]] = pair[1];
 			return result;
 		}, {});
-		
-		// TODO 
-		// В userAccessTokens токены доступа ПОЛЬЗОВАТЕЛЯ
-		// их сохранить в бдшку
-		// ЗАШИФРОВАННЫМИ
 
 		userData.user.oauth_token = userAccessTokens.oauth_token;
 		userData.user.oauth_token_secret = userAccessTokens.oauth_token_secret;
 		userData.user.save();
+		
+		waitingUsers.delete(req.query.oauth_token);
 
-		// console.log(user);
-		// console.log('callback DGSGSDGSGSRG');
-		// console.log(userAccessTokens);
 		res.redirect('/menu');
 	});
 });

@@ -23,8 +23,8 @@ tweetForm.addEventListener('submit', (event) => {
 		},
 		body: JSON.stringify(body) 
 	})
-		.then((response) => response.text())
-		.then((tweet) => console.log(tweet));
+		.then((response) => response.json())
+		.then((body) => console.log(body));
 });
 
 replyTweetForm.addEventListener('submit', (event) => {

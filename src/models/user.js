@@ -2,7 +2,6 @@ import mongoose from 'mongoose';
 import validator from 'validator';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
-import cryptoJS from 'crypto-js';
 
 import { encryptTokens, decryptTokens } from '../utils/cipher.js';
 

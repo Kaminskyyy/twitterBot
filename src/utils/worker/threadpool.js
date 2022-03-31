@@ -45,10 +45,10 @@ class WorkerPool extends EventEmitter {
 	}
 
 	addNewWorker() {
-		const worker = new Worker('WORKER_FILE_MUST_BE_REPLACED', import.meta.url);
+		const worker = new Worker('./src/utils/worker/worker.js', import.meta.url);
 
 		worker.on('message', (msg) => {
-			worker[kTaskInfo].done(null, result);
+			worker[kTaskInfo].done(null, msg);
 			worker[kTaskInfo] = null;
 
 			this.freeWorkers.push(worker);
@@ -59,7 +59,7 @@ class WorkerPool extends EventEmitter {
 			if (worker[kTaskInfo]) {
 				worker[kTaskInfo].done(error, null);
 			} else {
-				worker.emit('error', err);
+				worker.emit('error', error);
 			}
 
 			this.workers.splice(this.workers.indexOf(worker), 1);
@@ -84,10 +84,6 @@ class WorkerPool extends EventEmitter {
 
 	close() {
 		for (const worker of this.workers) worker.terminate();
-	}
-
-	logName() {
-		console.log('Pool name: ' + this.nameOfThisPool);
 	}
 }
 

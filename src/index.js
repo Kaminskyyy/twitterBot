@@ -1,5 +1,5 @@
 import { dirname, join } from 'path';
-import { fileURLToPath, URLSearchParams } from 'url';
+import { fileURLToPath } from 'url';
 
 import hbs from 'hbs';
 import 'dotenv/config';
@@ -8,9 +8,8 @@ import cookieParser from 'cookie-parser';
 
 import { router as userRouter } from './routers/user.js';
 import { router as twitterRouter } from './routers/twitter.js';
-import { router as twitterAuthRouter } from './routers/twitter-auth.js';
+import { router as twitterAuthRouter } from './routers/twitter_auth.js';
 import { router as pagesRouter } from './routers/pages.js';
-import WorkerPool from './utils/worker/threadpool.js';
 import './db/mongoose.js';
 
 const __filename = fileURLToPath(import.meta.url);

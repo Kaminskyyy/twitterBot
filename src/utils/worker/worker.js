@@ -1,43 +1,15 @@
-import { workerData, parentPort } from 'worker_threads';
-import request from 'postman-request';
-import { getNewestTweetId } from '../newestId.js';
+import { parentPort } from 'worker_threads';
 import { extractUsernames } from '../excel.js';
+import { postTweet } from '../twitter_utils.js';
 
-parentPort.postMessage('Worker created!');
-
-const { usernamesFileBuffer, tweet, oauth } = workerData;
 const url = 'https://api.twitter.com/2/tweets';
 
-const usernames = extractUsernames(usernamesFileBuffer);
+parentPort.on('message', async (task) => {
+	const { buffer, tweet, oauth } = task;
 
-parentPort.postMessage('Usernames extracted!');
+	const usernames = extractUsernames(buffer);
 
-for (let username of usernames) {
-	postTweet(username);
-}
+	const promise = Promise.allSettled(usernames.map((username) => postTweet(tweet, oauth, { inReplyToUser: username })));
 
-parentPort.postMessage('Tweets posted!');
-
-async function postTweet(username) {
-	try {
-		const in_reply_to_tweet_id = await getNewestTweetId(username, oauth);
-
-		const body = {
-			text: tweet,
-			reply: {
-				in_reply_to_tweet_id,
-			}
-		};
-
-		body.reply = {
-			in_reply_to_tweet_id,
-		};
-
-		request.post({ url, oauth, body, json: true }, (e, r, body) => {
-			if (e) throw new Error();
-			console.log(r.body);
-		});
-	} catch(error) {
-		console.log(error);
-	}
-}
+	parentPort.postMessage(await promise);
+});
