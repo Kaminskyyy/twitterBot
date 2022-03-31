@@ -43,12 +43,12 @@ const upload = multer({
 	}
 });
 
-const workerPool = new WorkerPool(4);
+const mailingWorkerPool = new WorkerPool(2, './src/utils/worker/mailing_worker.js');
 
 router.post('/twitter/mailing', auth, upload.single('doc'), async (req, res) => {
 	const oauth = await req.user.getTwitterApiAccessTokens();
 
-	workerPool.runTask({
+	mailingWorkerPool.runTask({
 		buffer: req.file.buffer,
 		oauth,
 		tweet: req.body.tweet

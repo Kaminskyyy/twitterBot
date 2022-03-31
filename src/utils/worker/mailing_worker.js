@@ -2,8 +2,6 @@ import { parentPort } from 'worker_threads';
 import { extractUsernames } from '../excel.js';
 import { postTweet } from '../twitter_utils.js';
 
-const url = 'https://api.twitter.com/2/tweets';
-
 parentPort.on('message', async (task) => {
 	const { buffer, tweet, oauth } = task;
 

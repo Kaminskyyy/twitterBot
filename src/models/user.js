@@ -4,6 +4,9 @@ import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 
 import { encryptTokens, decryptTokens } from '../utils/cipher.js';
+import WorkerPool from '../utils/worker/threadpool.js';
+
+const cipherWorkerPool = new WorkerPool(2, './src/utils/worker/cipher_worker.js');
 
 const userSchema = new mongoose.Schema({
 	email: {
@@ -50,17 +53,22 @@ userSchema.methods.generateAuthToken = function() {
 	return token;
 };
 
-
 userSchema.methods.getTwitterApiAccessTokens = async function() {
 	const user = this;
 	const keys = {};
 
-	const { oauthTokenDecrypted, oauthTokenSecretDecrypted } = await decryptTokens(user);
+	const result = await cipherWorkerPool.runTaskPromise({
+		task: 'decrypt',
+		tokens: {
+			oauth_token: user.oauth_token,
+			oauth_token_secret: user.oauth_token_secret,
+		}
+	});
 
 	keys.consumer_key = process.env.CONSUMER_KEY;
 	keys.consumer_secret = process.env.CONSUMER_SECRET;
-	keys.token = oauthTokenDecrypted;
-	keys.token_secret = oauthTokenSecretDecrypted;
+	keys.token = result.oauthTokenDecrypted;
+	keys.token_secret = result.oauthTokenSecretDecrypted;
 
 	return keys;
 };
@@ -99,10 +107,16 @@ userSchema.pre('save', async function(next) {
 	}
 
 	if (user.isModified('oauth_token')) {
-		const { oauthTokenEncrypted, oauthTokenSecretEncrypted } = await encryptTokens(user);
+		const result = await cipherWorkerPool.runTaskPromise({
+			task: 'encrypt',
+			tokens: {
+				oauth_token: user.oauth_token,
+				oauth_token_secret: user.oauth_token_secret,
+			}
+		});
 
-		user.oauth_token = oauthTokenEncrypted;
-		user.oauth_token_secret = oauthTokenSecretEncrypted;
+		user.oauth_token = result.oauthTokenEncrypted;
+		user.oauth_token_secret = result.oauthTokenSecretEncrypted;
 	}
 	
 	next();

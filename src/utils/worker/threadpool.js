@@ -20,14 +20,9 @@ class WorkerPoolTaskInfo extends AsyncResource {
 }
 
 class WorkerPool extends EventEmitter {
-	constructor(numThreads, name) {
-		if (WorkerPool[kSelf]) {
-			return WorkerPool[kSelf];
-		}
-
+	constructor(numThreads, workerPath) {
 		super();
-		WorkerPool[kSelf] = this;
-		this.nameOfThisPool = name;
+		this.workerPath = workerPath;
 		this.workers = [];
 		this.freeWorkers = [];
 		this.tasks = [];
@@ -45,7 +40,7 @@ class WorkerPool extends EventEmitter {
 	}
 
 	addNewWorker() {
-		const worker = new Worker('./src/utils/worker/worker.js', import.meta.url);
+		const worker = new Worker(this.workerPath, import.meta.url);
 
 		worker.on('message', (msg) => {
 			worker[kTaskInfo].done(null, msg);
@@ -80,6 +75,15 @@ class WorkerPool extends EventEmitter {
 		const worker = this.freeWorkers.pop();
 		worker[kTaskInfo] = new WorkerPoolTaskInfo(callback);
 		worker.postMessage(task);
+	}
+
+	runTaskPromise(task) {
+		return new Promise((resolve, reject) => {
+			this.runTask(task, (error, result) => {
+				if (error) reject(error);
+				else resolve(result);
+			});
+		});
 	}
 
 	close() {

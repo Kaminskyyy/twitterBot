@@ -37,6 +37,7 @@ async function postTweet(tweet, oauth, options = {}) {
 				};
 			} catch (error) {
 				reject({ error });
+				return;
 			}
 		}
 
