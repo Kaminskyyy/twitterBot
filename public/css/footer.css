@@ -1,0 +1,10 @@
+footer {
+	background-color: black;
+	height: 70px;
+}
+
+footer a {
+	color: white;
+	font-size: 24px;
+	margin-top: 20px;
+}

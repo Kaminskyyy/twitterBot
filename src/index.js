@@ -18,8 +18,6 @@ const port = process.env.PORT || 2000;
 
 
 
-
-
 const app = express();
 
 //	Template engine settings
@@ -27,7 +25,7 @@ app.set('view engine', 'hbs');
 app.set('views', join(__dirname, '../templates/views'));
 hbs.registerPartials(join(__dirname, '../templates/partials'));
 
-//	Middleware
+//	Middlewar
 app.use(cookieParser(process.env.COOKIE_PARSER_SECRET));
 app.use(express.json());
 app.use(express.static(join(__dirname,  '../public')));

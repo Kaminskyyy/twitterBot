@@ -1,60 +1,81 @@
 const tweetForm = document.getElementById('tweetForm');
-const tweetInput = document.getElementById('tweetInput');
-
-const replyToForm = document.getElementById('replyToForm');
-const replyToInput = document.getElementById('replyToInput');
-const replyTweetForm = document.getElementById('replyTweetForm');
-const replyTweetInput = document.getElementById('replyTweetInput');
+const replyForm = document.getElementById('replyForm');
+const mailingForm = document.getElementById('mailingForm');
 
 const bearer = getBearer();
 
-tweetForm.addEventListener('submit', (event) => {
+tweetForm.addEventListener('submit', async (event) => {
 	event.preventDefault();
 
+	const form = new FormData(tweetForm);
+
 	const body = {
-		text: tweetInput.value,
+		text: form.get('tweet'),
 	};
 	
-	fetch('/twitter/tweets', {
-		method: 'POST',
-		headers: {
-			'Content-Type': 'application/json;charset=utf-8',
-			'Authorization': 'Bearer ' + bearer,
-		},
-		body: JSON.stringify(body) 
-	})
-		.then((res) => { 
-			if (!res.ok) throw new Error('Bad request');
-			
-			return res.json();
-		})
-		.then((body) => console.log(body))
-		.catch(console.log);
+	try {
+		const response = await fetch('/twitter/tweets', {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json;charset=utf-8',
+				'Authorization': 'Bearer ' + bearer,
+			},
+			body: JSON.stringify(body) 
+		});
+
+		const result = await response.json();
+		console.log(result);
+	} catch (error) {
+		console.log(error);
+	}
 });
 
-replyTweetForm.addEventListener('submit', (event) => {
+replyForm.addEventListener('submit', async (event) => {
 	event.preventDefault();
 
+	const form = new FormData(replyForm);
+
 	const body = {
-		text: replyTweetInput.value,
-		replyToUser: replyToInput.value
+		text: form.get('tweet'),
+		replyToUser: form.get('replyToUser'),
 	};
 
-	fetch('/twitter/tweets', {
-		method: 'POST',
-		headers: {
-			'Content-Type': 'application/json;charset=utf-8',
-			'Authorization': 'Bearer ' + bearer,
-		},
-		body: JSON.stringify(body)
-	})
-		.then((res) => {
-			if (!res.ok) throw new Error('Bad request');
+	try {
+		const response = await fetch('/twitter/tweets', {
+			method: 'POST',
+			headers: {
+				'Authorization': 'Bearer ' + bearer,		
+				'Content-Type': 'application/json;charset=utf-8',
+			},
+			body: JSON.stringify(body),
+		});
 
-			return res.json();
-		})
-		.then((body) => console.log(body))
-		.catch(console.log);
+		const result = await response.json();
+		console.log(result);
+	} catch (error) {
+		console.log(error);
+	}
+});
+
+mailingForm.addEventListener('submit', async (event) => {
+	event.preventDefault();
+
+	const form = new FormData(mailingForm);
+
+	try {
+		const response = await fetch('/twitter/mailing', {
+			method: 'POST',
+			headers: {
+				'Authorization': 'Bearer ' + bearer,
+			},
+			body: form,
+		});
+
+		const result = await response.json();
+		console.log(result);
+	} catch (error) {
+		console.log(error);
+	}
 });
 
 function getBearer() {

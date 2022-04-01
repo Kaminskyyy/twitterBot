@@ -2,6 +2,7 @@
 <head>
 	<title>Menu</title>
 	<link rel="stylesheet" href="/css/header.css">
+	<link rel="stylesheet" href="/css/footer.css">
 	<link rel="stylesheet" href="/css/menu.css">
 	<link rel="preconnect" href="https://fonts.googleapis.com">
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -10,28 +11,36 @@
 <body>
 	{{>header}}
 	<div id="main">
-		<div id="postTweet">
-			<h3>Post tweet</h3>
-			<h6>Tweet</h6>
-			<form id="tweetForm">
-				<textarea id="tweetInput" placeholder="your tweet"></textarea>
-				<button>Post tweet</button>
-			</form>
-		</div>
+		<div>
+			<div id="postTweet">
+				<h3>Post tweet</h3>
+				<h6>Tweet</h6>
+				<form id="tweetForm">
+					<textarea id="tweetInput" name="tweet" placeholder="your tweet"></textarea>
+					<button>Post tweet</button>
+				</form>
+			</div>
 
-		<div id="postReply">
-			<h3>Post tweet in reply</h3>
-			<h6>Username</h6>
-			<form id="replyToForm">
-				<input id="replyToInput" placeholder="username without @">
-			</form>
-			<h6>Tweet</h6>
-			<form id="replyTweetForm">
-				<textarea id="replyTweetInput" placeholder="your tweet"></textarea>
-				<button>Post tweet</button>
+			<div id="postReply">
+				<h3>Post tweet in reply</h3>
+				<form id="replyForm">
+					<h6>Username</h6>
+					<input id="replyToInput" type="text" name="replyToUser">
+					<h6>Tweet</h6>
+					<textarea id="replyTweetInput" type="text" name="tweet"></textarea>
+					<button>Post tweet</button>
+				</form>
+			</div>
+		</div>
+		<div id="file">
+			<h6>Upload file with usernames</h6>
+			<form id="mailingForm">
+				<input id="mailingInput" type="file" name="doc">
+				<textarea id="mailingTweetInput" placeholder="your tweet" name="tweet"></textarea>
+				<button>Start mailing</button>
 			</form>
 		</div>
-		<a href="/account">Профиль</a>
 	</div>
+	{{>footer}}
 	<script src="/js/twitter_api.js"></script>
 </body>

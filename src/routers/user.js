@@ -19,6 +19,15 @@ router.post('/users', async (req, res) => {
 	}
 });
 
+router.delete('/users/me', auth, async (req, res) => {
+	try {
+		await User.findByIdAndDelete(req.user._id);
+		res.send(req.user);
+	} catch (error) {
+		res.status(500).send();
+	}
+});
+
 router.post('/users/login', async (req, res) => {
 	try {
 		const user = await User.findByCredentials(req.body.email, req.body.password);

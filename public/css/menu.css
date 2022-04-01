@@ -20,11 +20,15 @@ h6 {
 }
 
 #main {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
 	margin: auto;
+	padding-bottom: 40px;
 	width: auto;
 	min-width: 500px;
 	text-align: center;
 	border-top: 5px dashed #bf51ff1f;
+	border-bottom: 5px dashed #bf51ff1f;
 	border-width: 20px;
 }
 

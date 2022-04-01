@@ -1,46 +1,67 @@
-const logoutBtn = document.getElementById('logout');
-const logoutAllBtn = document.getElementById('logoutAll');
+const logoutButton = document.getElementById('logout');
+const logoutAllButton = document.getElementById('logout-all');
+const deleteUserButton = document.getElementById('delete-user');
 
 const bearer = getBearer();
 
-logoutBtn.addEventListener('click', (event) => {
+logoutButton.addEventListener('click', async (event) => {
 	event.preventDefault();
 
-	fetch('/users/logout', {
-		method: 'POST',
-		headers: {
-			'Content-Type': 'application/json;charset=utf-8',
-			'Authorization': 'Bearer ' + bearer,
-		},
-		body: JSON.stringify({}),
-	}).then((res) => {
-		if (!res.ok) {
-			return Promise.reject('Unable to logout');
-		}
+	try {
+		const response = await fetch('/users/logout', {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json;charset=utf-8',
+				'Authorization': 'Bearer ' + bearer,
+			},
+		});
 
+		if (!response.ok) throw new Error('Unable to logout');
 		document.cookie = 'bearer=';
 		window.location = '/';
-	});
+	} catch (error) {
+		console.log(error);
+	}
 });
 
-logoutAllBtn.addEventListener('click', (event) => {
+logoutAllButton.addEventListener('click', async (event) => {
 	event.preventDefault();
 
-	fetch('/users/logoutAll', {
-		method: 'POST',
-		headers: {
-			'Content-Type': 'application/json;charset=utf-8',
-			'Authorization': 'Bearer ' + bearer,
-		},
-		body: JSON.stringify({}),
-	}).then((res) => {
-		if (!res.ok) {
-			return Promise.reject('Unable to logout');
-		}
+	try {	
+		const response = await fetch('/users/logoutAll', {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json;charset=utf-8',
+				'Authorization': 'Bearer ' + bearer,
+			},
+		});
 
+		if (!response.ok) throw new Error('Unable to logout');
 		document.cookie = 'bearer=';
 		window.location = '/';
-	});
+	} catch (error) {
+		console.log(error);		
+	}
+});
+
+deleteUserButton.addEventListener('click', async (event) => {
+	event.preventDefault();
+
+	try {
+		const response = await fetch('/users/me', {
+			method: 'DELETE',
+			headers: {
+				'Content-Type': 'application/json;charset=utf-8',
+				'Authorization': 'Bearer ' + bearer,
+			},
+		});
+
+		if (!response.ok) throw new Error('Unable to delete user');
+		document.cookie = 'bearer=';
+		window.location = '/';
+	} catch (error) {
+		console.log(error);
+	}
 });
 
 function getBearer() {

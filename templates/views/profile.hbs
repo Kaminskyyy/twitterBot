@@ -1,10 +1,20 @@
 <!DOCTYPE html>
 <head>
 	<title>Profile</title>
+	<link rel="stylesheet" href="/css/profile.css">
+	<link rel="stylesheet" href="/css/header.css">
+	<link rel="stylesheet" href="/css/footer.css">
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Playfair+Display&display=swap" rel="stylesheet">
 </head>
 <body>
-	{{header}}
-	<button id="logout">Выйти</button>
-	<button id="logoutAll">Удалить все токены</button>
-	<script src="/js/profile.js"></script>
+	{{>header}}
+	<div id="main">
+		<button id="logout">Выйти</button>
+		<button id="logout-all">Удалить все токены</button>
+		<button id="delete-user">Удалить аккаунт</button>
+		<script src="/js/profile.js"></script>
+	</div>
+	{{>footer}}
 </body>
