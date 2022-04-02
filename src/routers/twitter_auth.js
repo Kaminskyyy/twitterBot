@@ -3,13 +3,8 @@ import request from 'postman-request';
 import { auth } from '../middleware/auth.js';
 const router = new Router();
 
-let callback = process.env.CALLBACK_DEV ;
-if (process.env.PORT) {
-	callback = process.env.CALLBACK_DEPLOY;
-}
-
 const consumerKeys = {
-	callback,
+	callback: process.env.TWITTER_AUTH_CALLBACK,
 	consumer_key: process.env.CONSUMER_KEY,
 	consumer_secret: process.env.CONSUMER_SECRET,
 };
